@@ -13,7 +13,7 @@
          <children>
             <TextArea fx:id="messages" prefHeight="530.0" prefWidth="600.0" />
             <TextField fx:id="input" layoutX="14.0" layoutY="543.0" prefHeight="25.0" prefWidth="456.0" />
-            <Button fx:id="send" layoutX="476.0" layoutY="543.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Send" />
+            <Button fx:id="send" layoutX="476.0" layoutY="543.0" mnemonicParsing="false" onAction="#handleSend" prefHeight="25.0" prefWidth="110.0" text="Send" />
          </children>
       </AnchorPane>
    </children>
