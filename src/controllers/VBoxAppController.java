@@ -25,12 +25,15 @@ public class VBoxAppController implements Initializable {
 	@FXML
 	private AnchorPane anchorPane;
 
+	private String nome;
 	private Socket socket;
 	private PrintWriter writer;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		networkConfig();
+		//this.nome = "Bruno";
+		this.nome = "Gabriel";
 
 	}
 	
@@ -47,8 +50,9 @@ public class VBoxAppController implements Initializable {
 	
 	@FXML
 	public void handleSend(){
-		writer.println(input.getText());
+		writer.println(this.nome + ": " + input.getText());
 		writer.flush();
+		messages.appendText(this.nome + ": " + input.getText() + "\n");
 		input.setText("");
 		input.requestFocus();
 	}
