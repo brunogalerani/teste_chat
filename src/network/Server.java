@@ -1,11 +1,16 @@
 package network;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Server {
+
+	List<PrintWriter> writers = new ArrayList<>();
 
 	public Server() {
 		try {
@@ -14,9 +19,22 @@ public class Server {
 			for (;;) {
 				Socket clientSocket = server.accept();
 				new Thread(new ListenClient(clientSocket)).start();
+				PrintWriter temp = new PrintWriter(clientSocket.getOutputStream());
+				writers.add(temp);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void toAllClients(String text) {
+		for (PrintWriter temp : writers) {
+			try {
+				temp.println(text);
+				temp.flush();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -34,12 +52,13 @@ public class Server {
 
 		@Override
 		public void run() {
-			try{
+			try {
 				String text;
-				while((text = reader.nextLine()) != null){
+				while ((text = reader.nextLine()) != null) {
 					System.out.println(text);
+					toAllClients(text);
 				}
-			} catch (Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

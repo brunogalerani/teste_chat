@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,33 +29,53 @@ public class VBoxAppController implements Initializable {
 	private String nome;
 	private Socket socket;
 	private PrintWriter writer;
+	private Scanner reader;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		networkConfig();
-		//this.nome = "Bruno";
-		this.nome = "Gabriel";
+		this.nome = "Bruno";
+		this.nome = "Leco";
 
 	}
-	
-	public void networkConfig(){
+
+	public void networkConfig() {
 		try {
 			socket = new Socket("127.0.0.1", 5000);
 			writer = new PrintWriter(socket.getOutputStream());
+			reader = new Scanner(socket.getInputStream());
+			new Thread(new ListenServer()).start();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
-	
+
 	@FXML
-	public void handleSend(){
+	public void handleSend() {
 		writer.println(this.nome + ": " + input.getText());
 		writer.flush();
-		messages.appendText(this.nome + ": " + input.getText() + "\n");
+		//messages.appendText(this.nome + ": " + input.getText() + "\n");
 		input.setText("");
 		input.requestFocus();
+	}
+
+	public class ListenServer implements Runnable {
+
+		@Override
+		public void run() {
+			try {
+				String text;
+				while ((text = reader.nextLine()) != null) {
+					messages.appendText(text  + "\n");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+
 	}
 
 }
