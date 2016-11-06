@@ -13,6 +13,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 public class VBoxAppController implements Initializable {
@@ -41,7 +43,7 @@ public class VBoxAppController implements Initializable {
 
 	public void networkConfig() {
 		try {
-			socket = new Socket("127.0.0.1", 5000);
+			socket = new Socket("192.168.1.32", 5000);
 			writer = new PrintWriter(socket.getOutputStream());
 			reader = new Scanner(socket.getInputStream());
 			new Thread(new ListenServer()).start();
@@ -53,10 +55,21 @@ public class VBoxAppController implements Initializable {
 	}
 
 	@FXML
-	public void handleSend() {
+	public void onMouseClick(){
+		sendText();
+	}
+	
+	@FXML
+	public void handleEnterPressed(KeyEvent event){
+	    if (event.getCode() == KeyCode.ENTER) {
+	        sendText();
+	    }
+	}
+	
+	
+	public void sendText() {
 		writer.println(this.nome + ": " + input.getText());
 		writer.flush();
-		//messages.appendText(this.nome + ": " + input.getText() + "\n");
 		input.setText("");
 		input.requestFocus();
 	}
